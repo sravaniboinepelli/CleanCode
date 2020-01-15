@@ -1,11 +1,11 @@
-package com.cleancoder.args;
+package com.schemaparser;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import static com.cleancoder.args.ArgsException.ErrorCode.*;
+import static com.schemaparser.ArgsException.ErrorCode.*;
 
 public class MapArgumentMarshaler implements ArgumentMarshaler {
   private Map<String, String> map = new HashMap<>();

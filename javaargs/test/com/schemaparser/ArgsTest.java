@@ -1,10 +1,10 @@
-package com.cleancoder.args;
+package com.schemaparser;
 
 import org.junit.Test;
 
 import java.util.Map;
 
-import static com.cleancoder.args.ArgsException.ErrorCode.*;
+import static com.schemaparser.ArgsException.ErrorCode.*;
 import static org.junit.Assert.*;
 
 public class ArgsTest {

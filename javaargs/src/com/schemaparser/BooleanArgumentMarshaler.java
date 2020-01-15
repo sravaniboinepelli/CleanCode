@@ -1,4 +1,4 @@
-package com.cleancoder.args;
+package com.schemaparser;
 
 import java.util.Iterator;
 

@@ -1,8 +1,8 @@
-package com.cleancoder.args;
+package com.schemaparser;
 
 import junit.framework.TestCase;
 
-import static com.cleancoder.args.ArgsException.ErrorCode.*;
+import static com.schemaparser.ArgsException.ErrorCode.*;
 
 public class ArgsExceptionTest extends TestCase {
   public void testUnexpectedMessage() throws Exception {

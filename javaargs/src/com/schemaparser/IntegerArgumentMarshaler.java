@@ -1,6 +1,6 @@
-package com.cleancoder.args;
+package com.schemaparser;
 
-import static com.cleancoder.args.ArgsException.ErrorCode.*;
+import static com.schemaparser.ArgsException.ErrorCode.*;
 
 import java.util.*;
 

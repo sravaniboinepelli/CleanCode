@@ -1,8 +1,8 @@
-package com.cleancoder.args;
+package com.schemaparser;
 
 import java.util.*;
 
-import static com.cleancoder.args.ArgsException.ErrorCode.*;
+import static com.schemaparser.ArgsException.ErrorCode.*;
 
 public class Args {
   private Map<Character, ArgumentMarshaler> marshalers;
