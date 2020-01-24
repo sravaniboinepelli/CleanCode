@@ -1,13 +1,27 @@
-package com.schemaparser;
+package com.sravani.schemaparser;
 
-import org.junit.Test;
+import static com.sravani.schemaparser.ArgsException.ErrorCode.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Map;
 
-import static com.schemaparser.ArgsException.ErrorCode.*;
-import static org.junit.Assert.*;
+import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.notification.Failure;
 
 public class ArgsTest {
+
+  public static void main(String[] args) {
+        Result result = JUnitCore.runClasses(ArgsTest.class);
+      for (Failure failure : result.getFailures()) {
+         System.out.println(failure.toString());
+      }
+      System.out.println(result.wasSuccessful());
+  }
+
 
   @Test
   public void testCreateWithNoSchemaOrArguments() throws Exception {

@@ -1,8 +1,8 @@
-package com.schemaparser;
+package com.sravani.schemaparser;
 
 import junit.framework.TestCase;
 
-import static com.schemaparser.ArgsException.ErrorCode.*;
+import static com.sravani.schemaparser.ArgsException.ErrorCode.*;
 
 public class ArgsExceptionTest extends TestCase {
   public void testUnexpectedMessage() throws Exception {
