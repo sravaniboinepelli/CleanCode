@@ -8,6 +8,7 @@ import com.sravani.argumentparser.ArgsException;
 
 
 public class ArgumentParser {
+
   public enum ArgumentType {
     BOOLEAN {
         public String toString() {
@@ -47,24 +48,15 @@ public class ArgumentParser {
 
   private Map<Character, ArgumentType> argsFound;
 
-  private Map<Character, String> intArgs;
-  private Map<Character, String> doubleArgs;
-  private Map<Character, String> stringArgs;
-  private Map<Character, List<String>> stringArrayArgs;
-  private Map<Character, Map<String, String>> mapArgs;
-
   private ListIterator<String> currentArgument;
+  private ArgumentTypeHandler argTypeHandler;
 
   public ArgumentParser(String schema, String[] args) throws ArgsException {
 
     schemaMap = new HashMap<Character, ArgumentType>();
     argsFound= new HashMap<Character, ArgumentType>();
 
-    intArgs = new HashMap<Character, String>();
-    doubleArgs = new HashMap<Character, String>();
-    stringArgs = new HashMap<Character, String>();
-    stringArrayArgs = new  HashMap<Character, List<String>>();
-    mapArgs = new HashMap<Character, Map<String, String>>();
+    argTypeHandler = new ArgumentTypeHandler();
 
     parseSchema(schema);
     parseArgumentStrings(Arrays.asList(args));
@@ -97,8 +89,9 @@ public class ArgumentParser {
       else
         throw new ArgsException(INVALID_ARGUMENT_FORMAT, elementId, elementTail);
     } catch (ArgsException e) {
-         System.out.println("Check format of the schema" +
-                    "valid schema example:(f,s*,n#,a##,p[*]) " + e.getMessage() );
+        throw e;
+        //  System.out.println("Check format of the schema" +
+        //             "valid schema example:(f,s*,n#,a##,p[*]) " + e.getMessage() );
     }  catch (Exception e) {
          System.out.println("Schema Parsing failed with " + e.getMessage() );
     }
@@ -135,7 +128,6 @@ public class ArgumentParser {
     } else {
       argsFound.put(argChar, type);
       try {
-        System.out.println("parseArgumentCharacter " + argChar + " " + type);
         if (type != ArgumentType.BOOLEAN){
           setArgument(currentArgument, type, argChar); 
         }     
@@ -146,8 +138,7 @@ public class ArgumentParser {
     }
   }
   
-  private ArgsException.ErrorCode getArgsExceptionCode(ArgumentType type,
-                               NoSuchElementException e){
+  private ArgsException.ErrorCode getArgsExceptionCode(ArgumentType type){
     ArgsException.ErrorCode errCode = OK;         
     switch (type){
       case INTEGER:
@@ -168,51 +159,6 @@ public class ArgumentParser {
     }
     return errCode;
   }
-  private void setIntArgs(String parameter, char argChar) throws ArgsException {
-    try {
-      int intValue = Integer.parseInt(parameter);
-      intArgs.put(argChar, parameter);
-    } catch (NumberFormatException e) {
-      throw new ArgsException(INVALID_INTEGER, parameter);
-    }
-  }
-
-  private void setDoubleArgs(String parameter, char argChar) throws ArgsException {
-    try {
-      double doubleValue = Double.parseDouble(parameter);
-      doubleArgs.put(argChar, parameter);
-    } catch (NumberFormatException e) {
-       throw new ArgsException(INVALID_DOUBLE, parameter);
-    }
-   
-  }
-  private void setStringArrayArgs(String parameter, char argChar) throws ArgsException {
-    List<String> strings;
-    
-    strings = stringArrayArgs.get(argChar);
-    if (strings == null) {
-        strings = new ArrayList<String>();
-    }
-    strings.add(parameter);
-    stringArrayArgs.put(argChar, strings);
-  
-  }
-  
-  private void setMapArgs(String parameter, char argChar) throws ArgsException {
-    Map<String, String> map = mapArgs.get(argChar);
-    String[] mapEntries = parameter.split(",");
-    for (String entry : mapEntries) {
-        String[] entryComponents = entry.split(":");
-        if (entryComponents.length != 2)
-          throw new ArgsException(MALFORMED_MAP);
-        if (map  == null){
-          map  = new HashMap<>();           
-        }
-        map.put(entryComponents[0], entryComponents[1]);
-    }
-    mapArgs.put(argChar, map);
-   
-  }
 
   private void setArgument(Iterator<String> currentArgument,
                ArgumentType type, char argChar) throws ArgsException {
@@ -221,26 +167,26 @@ public class ArgumentParser {
       parameter = currentArgument.next();
       switch (type){
         case INTEGER:
-         setIntArgs(parameter, argChar);
+          argTypeHandler.setIntArgs(parameter, argChar);
           break;
         case DOUBLE:
-          setDoubleArgs(parameter, argChar);
+          argTypeHandler.setDoubleArgs(parameter, argChar);
           break;
         case STRING:     
-          stringArgs.put(argChar, parameter);
+          argTypeHandler.setStringArgs(parameter, argChar);
           break;
         case STRINGARRAY:
-          setStringArrayArgs(parameter, argChar);
+          argTypeHandler.setStringArrayArgs(parameter, argChar);
           break;
         case MAPTYPE:
-          setMapArgs(parameter, argChar);
+          argTypeHandler.setMapArgs(parameter, argChar);
           break;
         default:
           throw new ArgsException(UNEXPECTED_ARGUMENT, argChar, null);
       }
       
     } catch (NoSuchElementException e) {
-      throw new ArgsException(getArgsExceptionCode(type, e));
+      throw new ArgsException(getArgsExceptionCode(type));
     }
   }
   
@@ -264,7 +210,7 @@ public class ArgumentParser {
   public String getString(char arg) {
     ArgumentType type = argsFound.get(arg);
     if ((type != null) && (type == ArgumentType.STRING)) {
-        return stringArgs.get(arg);
+        return argTypeHandler.getString(arg);
     }
     return "";
   }
@@ -273,7 +219,7 @@ public class ArgumentParser {
   public int getInt(char arg) {
     ArgumentType type = argsFound.get(arg);
     if ((type != null) && (type == ArgumentType.INTEGER)) {
-         return Integer.parseInt(intArgs.get(arg));
+         return argTypeHandler.getInt(arg);
     }
     return 0;
   }
@@ -281,7 +227,7 @@ public class ArgumentParser {
   public double getDouble(char arg) {
     ArgumentType type = argsFound.get(arg);
     if ((type != null) && (type == ArgumentType.DOUBLE)) {
-        return Double.parseDouble(doubleArgs.get(arg));
+        return argTypeHandler.getDouble(arg);
     }
     return 0;
   }
@@ -289,7 +235,7 @@ public class ArgumentParser {
   public String[] getStringArray(char arg) {
     ArgumentType type = argsFound.get(arg);
     if ((type != null) && (type == ArgumentType.STRINGARRAY)) {
-        return stringArrayArgs.get(arg).toArray(new String[0]);
+        return argTypeHandler.getStringArray(arg);
     }
     return new String[0];
   }
@@ -297,7 +243,7 @@ public class ArgumentParser {
   public Map<String, String> getMap(char arg) {
     ArgumentType type = argsFound.get(arg);
     if ((type != null) && (type == ArgumentType.MAPTYPE)) {
-        return mapArgs.get(arg);
+        return argTypeHandler.getMap(arg);
     }
     return new HashMap<>();
   }

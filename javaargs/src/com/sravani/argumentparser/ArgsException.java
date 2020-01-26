@@ -46,9 +46,6 @@ public class ArgsException extends Exception {
     return errorCode;
   }
 
-  // public String getErrorMessage() {
-  //   return errorCode;
-  // }
 
   public void setErrorCode(ErrorCode errorCode) {
     this.errorCode = errorCode;
