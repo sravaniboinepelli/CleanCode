@@ -1,10 +1,24 @@
-package com.sravani.schemaparser;
+package com.sravani.argumentparser;
 
 import junit.framework.TestCase;
 
-import static com.sravani.schemaparser.ArgsException.ErrorCode.*;
+// import org.junit.Test;
+// import org.junit.runner.JUnitCore;
+// import org.junit.runner.Result;
+// import org.junit.runner.notification.Failure;
+
+import static com.sravani.argumentparser.ArgsException.ErrorCode.*;
 
 public class ArgsExceptionTest extends TestCase {
+
+  // public static void main(String[] args) {
+  //   Result result = JUnitCore.runClasses(ArgsExceptionTest.class);
+  //   for (Failure failure : result.getFailures()) {
+  //     System.out.println(failure.toString());
+  //   }
+  //   System.out.println(result.wasSuccessful());
+  // }
+
   public void testUnexpectedMessage() throws Exception {
     ArgsException e = new ArgsException(UNEXPECTED_ARGUMENT, 'x', null);
     assertEquals("Argument -x unexpected.", e.errorMessage());

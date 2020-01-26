@@ -1,6 +1,6 @@
-package com.sravani.schemaparser;
+package com.sravani.argumentparser;
 
-import static com.sravani.schemaparser.ArgsException.ErrorCode.*;
+import static com.sravani.argumentparser.ArgsException.ErrorCode.*;
 
 public class ArgsException extends Exception {
   private char errorArgumentId = '\0';
@@ -46,11 +46,15 @@ public class ArgsException extends Exception {
     return errorCode;
   }
 
+  // public String getErrorMessage() {
+  //   return errorCode;
+  // }
+
   public void setErrorCode(ErrorCode errorCode) {
     this.errorCode = errorCode;
   }
 
-  public String errorMessage() {
+  public String getMessage() {
     switch (errorCode) {
       case OK:
         return "TILT: Should not get here.";

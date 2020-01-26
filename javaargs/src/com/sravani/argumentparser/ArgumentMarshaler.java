@@ -1,4 +1,4 @@
-package com.sravani.schemaparser;
+package com.sravani.argumentparser;
 
 import java.util.Iterator;
 

@@ -1,6 +1,6 @@
-package com.sravani.schemaparser;
+package com.sravani.argumentparser;
 
-import static com.sravani.schemaparser.ArgsException.ErrorCode.*;
+import static com.sravani.argumentparser.ArgsException.ErrorCode.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -10,12 +10,13 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
 public class ArgsTest {
 
   public static void main(String[] args) {
-        Result result = JUnitCore.runClasses(ArgsTest.class);
+      Result result = JUnitCore.runClasses(ArgsTest.class);
       for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());
       }
