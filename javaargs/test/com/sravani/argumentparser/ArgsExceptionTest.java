@@ -2,22 +2,11 @@ package com.sravani.argumentparser;
 
 import junit.framework.TestCase;
 
-import org.junit.Test;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
-
 import static com.sravani.argumentparser.ArgsException.ErrorCode.*;
 
 public class ArgsExceptionTest extends TestCase {
 
-  public static void main(String[] args) {
-    Result result = JUnitCore.runClasses(ArgsExceptionTest.class);
-    for (Failure failure : result.getFailures()) {
-      System.out.println(failure.toString());
-    }
-    System.out.println(result.wasSuccessful());
-  }
+  
 
   public void testUnexpectedMessage() throws Exception {
     ArgsException e = new ArgsException(UNEXPECTED_ARGUMENT, 'x', null);
@@ -67,6 +56,16 @@ public class ArgsExceptionTest extends TestCase {
   public void testInvalidFormat() throws Exception {
     ArgsException e = new ArgsException(INVALID_ARGUMENT_FORMAT, 'x', "$");
     assertEquals("'$' is not a valid argument format.", e.getMessage());
+  }
+  public void testMissingSchemaMessage() throws Exception {
+    ArgsException e = new ArgsException(MISSING_SCHEMA, "null");
+    assertEquals("Schema need to be supplied. please supply schema string of form f,n#,d##",
+                 e.getMessage());
+  }
+  public void testMissingArgumentsMessage() throws Exception {
+    ArgsException e = new ArgsException(MISSING_ARGUMENT_LIST, "null");
+    assertEquals("Argument list missing. Please supply argument string array of form -f -n 10, -d 3.5",
+                 e.getMessage());
   }
 }
 

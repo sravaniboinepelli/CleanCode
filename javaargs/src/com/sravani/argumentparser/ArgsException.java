@@ -75,7 +75,13 @@ public class ArgsException extends Exception {
         return String.format("Could not find map string for -%c.", errorArgumentId);
       case MALFORMED_MAP:
         return String.format("Map string for -%c is not of form k1:v1,k2:v2...", errorArgumentId);
-    }
+      case MISSING_SCHEMA:
+        return String.format("Schema need to be supplied. please supply schema string of form %s",
+                             "f,n#,d##");
+      case MISSING_ARGUMENT_LIST:
+        return String.format("Argument list missing. Please supply argument string array of form %s",
+                            "-f -n 10, -d 3.5");
+  }
     return "";
   }
 
@@ -83,5 +89,6 @@ public class ArgsException extends Exception {
     OK, INVALID_ARGUMENT_FORMAT, UNEXPECTED_ARGUMENT, INVALID_ARGUMENT_NAME,
     MISSING_STRING,
     MISSING_INTEGER, INVALID_INTEGER,
-    MISSING_DOUBLE, MALFORMED_MAP, MISSING_MAP, INVALID_DOUBLE}
+    MISSING_DOUBLE, MALFORMED_MAP, MISSING_MAP, INVALID_DOUBLE, MISSING_SCHEMA,
+    MISSING_ARGUMENT_LIST}
 }

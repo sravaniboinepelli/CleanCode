@@ -1,16 +1,37 @@
 <project>
+    <path id="build.classpath">
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+            <include name="**/*.zip"/>
+        </fileset>
+    </path>
     <target name="clean">
         <delete dir="build"/>
     </target>
 
     <target name="compile">
-        <mkdir dir="build/classes"/>
-        <javac srcdir="src" destdir="build/classes"/>
+        <mkdir dir="build/src/classes"/>
+        <javac srcdir="src" destdir="build/src/classes"/>
     </target>
 
     <target name="jar" depends="compile">
         <mkdir dir="build/jar"/>
-        <jar destfile="build/jar/args.jar" basedir="build/classes">
+        <jar destfile="build/jar/argumentparser.jar" basedir="build/src/classes">
         </jar>
     </target>
+
+    <target name="compiletest">
+        <mkdir dir="build/test/classes"/>
+        <copy file="build/jar/argumentparser.jar" todir="lib"/>
+        <javac srcdir="test" destdir="build/test/classes">
+            <classpath refid="build.classpath"/>        
+        </javac>
+    </target>
+    <target name="jartest" depends="compiletest">
+        <mkdir dir="build/jar"/>
+        <jar destfile="build/jar/argumentparsertest.jar" basedir="build/test/classes">
+        </jar>
+    </target>
+
+
 </project>

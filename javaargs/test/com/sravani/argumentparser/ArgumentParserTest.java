@@ -9,20 +9,9 @@ import static org.junit.Assert.fail;
 import java.util.Map;
 
 import org.junit.Test;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
+
 
 public class ArgumentParserTest {
-
-  public static void main(String[] args) {
-      Result result = JUnitCore.runClasses(ArgumentParserTest.class);
-      for (Failure failure : result.getFailures()) {
-         System.out.println(failure.toString());
-      }
-      System.out.println(result.wasSuccessful());
-  }
-
 
   @Test
   public void testCreateWithNoSchemaOrArguments() throws Exception {
@@ -30,6 +19,25 @@ public class ArgumentParserTest {
     assertEquals(0, args.nextArgument());
   }
 
+  @Test
+  public void testCreateWithNullSchema() throws Exception {
+    try {
+      ArgumentParser args = new ArgumentParser(null, new String[0]);
+      assertEquals(0, args.nextArgument());
+    } catch (ArgsException e) {
+      assertEquals(MISSING_SCHEMA, e.getErrorCode());
+    }
+  }
+
+  @Test
+  public void testCreateWithNullArgument() throws Exception {
+    try {
+      ArgumentParser args = new ArgumentParser("f,n#", null);
+      assertEquals(0, args.nextArgument());
+    } catch (ArgsException e) {
+      assertEquals(MISSING_ARGUMENT_LIST, e.getErrorCode());
+    }
+  }
 
   @Test
   public void testWithNoSchemaButWithOneArgument() throws Exception {
@@ -242,6 +250,49 @@ public class ArgumentParserTest {
     assertFalse(args.getBoolean('y'));
     assertEquals(1, args.nextArgument());
   }
-  testint wiith double value and vice versa, testcombination , repeat
-  one main test???
+
+  @Test
+  public void testIntwithDoubleValue() throws Exception {
+    try {
+      new ArgumentParser("x#", new String[]{"-x", "4.3"});
+      fail();
+    } catch (ArgsException e) {
+      assertEquals(INVALID_INTEGER, e.getErrorCode());
+      assertEquals('x', e.getErrorArgumentId());
+      assertEquals("4.3", e.getErrorParameter());
+    }
+  }
+
+  @Test
+  public void testRepeatedPrimitiveTypes() throws Exception {
+    ArgumentParser args = new ArgumentParser("x#,y##,s*",
+                        new String[]{"-x", "4", "-y", "3.4",
+                                    "-x", "400", "-y", "9.56",
+                                    "-s", "string1", "-s" , "string2"});
+    assertEquals(400, args.getInt('x'));
+    assertEquals(9.56, args.getDouble('y'), .001);
+    assertEquals("string2", args.getString('s'));     
+  
+  }
+
+  @Test
+  public void testRepeatedNonPrimitiveTypes() throws Exception {
+    ArgumentParser args = new ArgumentParser("x[*],m&",
+                        new String[]{"-x", "string1", "-x", "test1:test2",
+                                    "-m", "name:test1", "-m", "age:42",
+                                    "-x", "string3", "-m", "addr:myaddr"});
+  
+    Map<String, String> map = args.getMap('m');
+    assertEquals("test1", map.get("name"));
+    assertEquals("42", map.get("age"));
+    assertEquals("myaddr", map.get("addr"));
+    
+    String[] result = args.getStringArray('x');
+    assertEquals(3, result.length);
+    assertEquals("string1", result[0]);
+    assertEquals("test1:test2", result[1]);
+    assertEquals("string3", result[2]);    
+  
+  }
+
 }

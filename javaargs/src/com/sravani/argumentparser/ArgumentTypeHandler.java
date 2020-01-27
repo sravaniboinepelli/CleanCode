@@ -19,7 +19,7 @@ public class ArgumentTypeHandler {
 
 
   public ArgumentTypeHandler() throws ArgsException {
-
+  
     intArgs = new HashMap<Character, String>();
     doubleArgs = new HashMap<Character, String>();
     stringArgs = new HashMap<Character, String>();
@@ -27,8 +27,22 @@ public class ArgumentTypeHandler {
     mapArgs = new HashMap<Character, Map<String, String>>();
   
   }
+  private boolean isInputValid(String value, 
+                                        char key) throws ArgsException {
+    boolean inputValid = true;
+    Optional<String> paramValue= Optional.ofNullable(value);
+
+    if (paramValue.isPresent()== false){
+       inputValid = false;
+    }
+    return inputValid;
+  }
+
+
 
   public void setIntArgs(String parameter, char argChar) throws ArgsException {
+    if (isInputValid(parameter, argChar) == false)
+        return;
     try {
       int intValue = Integer.parseInt(parameter);
       intArgs.put(argChar, parameter);
@@ -38,6 +52,8 @@ public class ArgumentTypeHandler {
   }
 
   public void setDoubleArgs(String parameter, char argChar) throws ArgsException {
+    if (isInputValid(parameter, argChar) == false)
+        return;
     try {
       double doubleValue = Double.parseDouble(parameter);
       doubleArgs.put(argChar, parameter);
@@ -47,12 +63,15 @@ public class ArgumentTypeHandler {
    
   }
   public void setStringArgs(String parameter, char argChar) throws ArgsException {
+    if (isInputValid(parameter, argChar) == false)
+       return;
      stringArgs.put(argChar, parameter);
    
   }
   public void setStringArrayArgs(String parameter, char argChar) throws ArgsException {
     List<String> strings;
-    
+    if (isInputValid(parameter, argChar) == false)
+        return;
     strings = stringArrayArgs.get(argChar);
     if (strings == null) {
         strings = new ArrayList<String>();
@@ -63,6 +82,8 @@ public class ArgumentTypeHandler {
   }
   
   public void setMapArgs(String parameter, char argChar) throws ArgsException {
+    if (isInputValid(parameter, argChar) == false)
+        return;
     Map<String, String> map = mapArgs.get(argChar);
     String[] mapEntries = parameter.split(",");
     for (String entry : mapEntries) {

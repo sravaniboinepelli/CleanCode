@@ -1,6 +1,8 @@
 package com.sravani.argumentparser;
 
 import java.util.*;
+import java.util.Optional;   
+
 
 import static com.sravani.argumentparser.ArgsException.ErrorCode.*;
 
@@ -59,22 +61,23 @@ public class ArgumentParser {
    * Parse arguments based on the schema supplied. 
    * @param schema schema should be defined with any normal character
    *               followed by special characters(# for integer,
-   *                ## for double, * for string, [*] for string array,
-   *                & for map type of data)
-   *                example:"f,s*,n#,a##,p[*],m&"
-   * @param args  arguments to be parsed. they should be specfied with a
-   *              "-" prefix followed by letter mentioned in schema followed by 
-   *              actual value.
-   *              example: -f -s Bob -n 1 -a 3.2 -p e1 -p e2 -p e3
-   *              repeated letters will be added to data for string array and map
-   *              and overwritten by last mentioned argument for others.
+   *               ## for double, * for string, [*] for string array,
+   *               & for map type of data)
+   *               example:"f,s*,n#,a##,p[*],m&"
+   * @param args   arguments to be parsed. they should be specfied with a
+   *               "-" prefix followed by letter mentioned in schema followed by 
+   *               actual value.
+   *               example: -f -s Bob -n 1 -a 3.2 -p e1 -p e2 -p e3
+   *               repeated letters will be added to data for string array and map
+   *               and overwritten by last mentioned argument for others.
    */
 
   public ArgumentParser(String schema, String[] args) throws ArgsException {
 
+    validateInputsForPresence(schema, args);
     schemaMap = new HashMap<Character, ArgumentType>();
     argsFound= new HashMap<Character, ArgumentType>();
-
+    
     argTypeHandler = new ArgumentTypeHandler();
 
     parseSchema(schema);
@@ -118,6 +121,19 @@ public class ArgumentParser {
     if (!Character.isLetter(elementId))
       throw new ArgsException(INVALID_ARGUMENT_NAME, elementId, null);
   }
+  private void validateInputsForPresence(String schema, 
+                                        String[] args) throws ArgsException {
+    Optional<String> optionSchema= Optional.ofNullable(schema);
+    Optional<String[]> optionArgs= Optional.ofNullable(args);
+
+    if (optionSchema.isPresent()== false){
+       throw new ArgsException(MISSING_SCHEMA, "null");
+    }
+    if (optionArgs.isPresent()== false){
+      throw new ArgsException(MISSING_ARGUMENT_LIST, "null");
+    }
+  }
+
 
   private void parseArgumentStrings(List<String> argsList) throws ArgsException {
     for (currentArgument = argsList.listIterator(); currentArgument.hasNext();) {
@@ -262,4 +278,5 @@ public class ArgumentParser {
     }
     return new HashMap<>();
   }
+  
 }

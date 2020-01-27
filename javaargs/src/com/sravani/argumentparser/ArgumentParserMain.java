@@ -12,8 +12,6 @@ public class ArgumentParserMain {
          arg = new ArgumentParser("f,s*,n#,a##,p[*],m&",
                                                  arguments);
       } else {
-         // ArgumentParser arg = new ArgumentParser("l,p#,d*", args);
-         // ArgumentParser arg = new ArgumentParser("f,s*,n#,a##,p[*],m&", args);
          arg = new ArgumentParser("f,s*,n#,a##,p[*],m&", args); 
       }
       boolean logging = arg.getBoolean('f');
@@ -33,10 +31,8 @@ public class ArgumentParserMain {
       System.out.println("map data:");
       Set<String> keys = map.keySet();
       for(String key: keys){
-        System.out.print(key + ":" + map.get(key));
-      }
-      System.out.println("");
-      
+        System.out.println(key + ":" + map.get(key));
+      }      
     } catch (ArgsException e) {
       System.out.printf("Argument error: %s\n", e.getMessage());
     }
