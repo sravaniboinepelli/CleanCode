@@ -1,5 +1,9 @@
 # Cleaned up version of javaargs code 
   This code parses the command line arguments based on the schema supplied.
+
+## Name
+  Sravani Boinepelli, Roll No: 20171050
+
 ## Features implemented
   Following features are iplemented.
   1. Parse schema and store the letter to data type mapping.
