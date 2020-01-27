@@ -9,7 +9,7 @@ public class ArgumentParserMain {
       if (args.length == 0){
          String argument = "-f -s Bob -n 1 -a 3.2 -p e1 -p e2 -p e3";
          String [] arguments = argument.split(" ");
-        arg = new ArgumentParser("f,s*,n#,a##,p[*],m&",
+         arg = new ArgumentParser("f,s*,n#,a##,p[*],m&",
                                                  arguments);
       } else {
          // ArgumentParser arg = new ArgumentParser("l,p#,d*", args);

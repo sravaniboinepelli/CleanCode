@@ -4,7 +4,11 @@ import java.util.*;
 
 import static com.sravani.argumentparser.ArgsException.ErrorCode.*;
 
-
+/**
+ * This class is helper class for Argument Parser, it stores the
+ * value of the command line argument in the right Map structure 
+ * for later retrieval.
+ */
 public class ArgumentTypeHandler {
   
   private Map<Character, String> intArgs;

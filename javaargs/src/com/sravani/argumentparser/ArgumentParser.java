@@ -6,7 +6,12 @@ import static com.sravani.argumentparser.ArgsException.ErrorCode.*;
 
 import com.sravani.argumentparser.ArgsException;
 
-
+  /**
+   * This class is used to parse arguments given as per the schema
+   * supplied. It is currently supporting int, double, string
+   * string array and map type of data. See constructor comments
+   * for details on schema and arguments format.
+   */
 public class ArgumentParser {
 
   public enum ArgumentType {
@@ -50,6 +55,20 @@ public class ArgumentParser {
 
   private ListIterator<String> currentArgument;
   private ArgumentTypeHandler argTypeHandler;
+ /**
+   * Parse arguments based on the schema supplied. 
+   * @param schema schema should be defined with any normal character
+   *               followed by special characters(# for integer,
+   *                ## for double, * for string, [*] for string array,
+   *                & for map type of data)
+   *                example:"f,s*,n#,a##,p[*],m&"
+   * @param args  arguments to be parsed. they should be specfied with a
+   *              "-" prefix followed by letter mentioned in schema followed by 
+   *              actual value.
+   *              example: -f -s Bob -n 1 -a 3.2 -p e1 -p e2 -p e3
+   *              repeated letters will be added to data for string array and map
+   *              and overwritten by last mentioned argument for others.
+   */
 
   public ArgumentParser(String schema, String[] args) throws ArgsException {
 
@@ -90,8 +109,6 @@ public class ArgumentParser {
         throw new ArgsException(INVALID_ARGUMENT_FORMAT, elementId, elementTail);
     } catch (ArgsException e) {
         throw e;
-        //  System.out.println("Check format of the schema" +
-        //             "valid schema example:(f,s*,n#,a##,p[*]) " + e.getMessage() );
     }  catch (Exception e) {
          System.out.println("Schema Parsing failed with " + e.getMessage() );
     }
@@ -122,7 +139,6 @@ public class ArgumentParser {
 
   private void parseArgumentCharacter(char argChar) throws ArgsException {
     ArgumentType type = schemaMap.get(argChar);
-    // System.out.println("parse" + argChar + " " + schemaMap.get(argChar) + " ttt" + ArgumentType.BOOLEAN);
     if (type == null) {
       throw new ArgsException(UNEXPECTED_ARGUMENT, argChar, null);
     } else {
@@ -200,7 +216,6 @@ public class ArgumentParser {
 
   public boolean getBoolean(char arg) {
     ArgumentType type = argsFound.get(arg);
-    // System.out.println(arg + " " + argsFound.get(arg) + " ttt" + ArgumentType.BOOLEAN);
     if ((type != null) && (type == ArgumentType.BOOLEAN)) {
         return true;
     }

@@ -242,4 +242,6 @@ public class ArgumentParserTest {
     assertFalse(args.getBoolean('y'));
     assertEquals(1, args.nextArgument());
   }
+  testint wiith double value and vice versa, testcombination , repeat
+  one main test???
 }
